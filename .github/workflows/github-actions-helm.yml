@@ -1,0 +1,23 @@
+name: Apnmt Build Helm Chart
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+      - uses: azure/setup-helm@v1
+      - name: Index Repository
+        run: |
+          helm repo index --url https://apnmt.github.io/apnmt-charts/ .
+      - name: Update repo
+        run: |
+          git config --global user.name 'apnmt'
+          git config --global user.email 'apnmt@apnmt.com'
+          git add -A
+          git commit -m "Update repo [SKIP CI]"
+          git push
